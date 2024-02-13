@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         movementSpeed = walkSpeed;
+        movement = Vector2.zero;
     }
 
     private void Awake()
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleInputs();
+        HandleAnimations();
     }
 
     
@@ -43,18 +45,43 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetFloat("MoveX", movement.x);
         animator.SetFloat("MoveY", movement.y);
+
+        if (movement.x != 0)
+        {
+            animator.SetFloat("LastFacingX", movement.x);
+            animator.SetFloat("LastFacingY", 0f);
+        }
+
+        if (movement.y !=0)
+        {
+            animator.SetFloat("LastFacingY", movement.y);
+            animator.SetFloat("LastFacingX", 0f);
+        }
+
+        animator.SetBool("Idle", idle);
+        animator.SetBool("Running", running);
     }
 
     private void HandleMovement()
     {
-        movement.Normalize();
-        rb.MovePosition((Vector2)transform.position + (movement * movementSpeed * Time.fixedDeltaTime));
+        Vector2 normMovement = movement;
+        normMovement.Normalize();
+        rb.MovePosition((Vector2)transform.position + (normMovement * movementSpeed * Time.fixedDeltaTime));
     }
 
     private void HandleInputs()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        if ((movement.x < 1f && movement.x > -1f) && (movement.y < 1f && movement.y > -1f))
+        {
+            idle = true;
+        }
+        else
+        {
+            idle = false;
+        }
 
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
