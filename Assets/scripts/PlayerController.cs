@@ -35,12 +35,13 @@ public class PlayerController : MonoBehaviour
         HandleAnimations();
     }
 
-    
+    // Fixed upadte happening only on certain frames
     private void FixedUpdate()
     {
         HandleMovement();
     }
 
+    //method to handle passing information to the animator
     private void HandleAnimations()
     {
         animator.SetFloat("MoveX", movement.x);
@@ -62,6 +63,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Running", running);
     }
 
+    //method that handles the movement of the player
     private void HandleMovement()
     {
         Vector2 normMovement = movement;
@@ -69,6 +71,7 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition((Vector2)transform.position + (normMovement * movementSpeed * Time.fixedDeltaTime));
     }
 
+    //method that handles logic around player inputs
     private void HandleInputs()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
